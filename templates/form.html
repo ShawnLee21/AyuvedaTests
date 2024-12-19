@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿育吠陀体质测试</title>
+	<!-- 引用主样式 -->
+	<link rel="stylesheet" href="/static/css/main.css">
+	<link rel="stylesheet" href="/static/css/custom.css">
+    <style>
+        .form-page {
+            display: none; /* 默认隐藏所有页面 */
+        }
+        .form-page.active {
+            display: block; /* 只显示当前页面 */
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>阿育吠陀体质测试</h1>
+    </header>
+    <main>
+        <article id="test">
+            <p class="major">建议填写两次：<br>
+				第一次选择多年来最符合自己生活状态的描述：得到“自然体质”。<br>
+				第二次选择近一两个月来最符合自己生活状态的描述：得到“当前体质/失衡体质“。<br>
+				推荐与配偶或亲近的朋友陪同作答。</br>
+			</p>
+            <!-- 问卷表单 -->
+            <form id="ayurveda-test-form" action="/submit" method="post">
+				<!-- 基本信息页面 -->
+				<div class="form-page active">
+					<fieldset>
+						<legend>基本信息</legend>
+						<!-- 年龄 -->
+						<label>
+							<span>年龄</span>
+							<input type="range" name="age" min="1" max="120" value="25" oninput="this.nextElementSibling.value = this.value">
+							<output>25</output> <!-- 动态显示滑块的当前值 -->
+						</label>
+						<!-- 性别 -->
+						<label>
+							<span>性别</span>
+							<select name="gender">
+								<option value="" disabled selected>请选择您的性别</option>
+								<option value="male">男</option>
+								<option value="female">女</option>
+								<option value="other">其他</option>
+							</select>
+						</label>
+			
+						<!-- 行业 -->
+						<label>
+							<span>行业</span>
+							<input type="text" name="industry" placeholder="请输入您的行业">
+						</label>
+					</fieldset>
+			
+					<div class="button-container">
+						<button type="button" class="next-button">下一页</button>
+					</div>
+				</div>
+				<!-- 问卷页面（继续原有页面内容） -->
+			<!-- 页面 1 -->
+				<div class="form-page active"> <!-- 页面 1：默认显示 -->
+					<!-- 问题 1：体型 -->
+					<fieldset>
+						<legend>1. 体型</legend> <!-- 问题标题 -->
+						<label>
+							<input type="radio" name="q1" value="苗条" data-dosha="vata"> <!-- 单选按钮 -->
+							<span>苗条</span> <!-- 选项文字 -->
+						</label>
+						<label>
+							<input type="radio" name="q1" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q1" value="巨大" data-dosha="kapha">
+							<span>巨大</span>
+						</label>
+					</fieldset>
+				
+					<!-- 问题 2：体重 -->
+					<fieldset>
+						<legend>2. 体重</legend> <!-- 问题标题 -->
+						<label>
+							<input type="radio" name="q2" value="过轻" data-dosha="vata"> <!-- 单选按钮 -->
+							<span>过轻</span> <!-- 选项文字 -->
+						</label>
+						<label>
+							<input type="radio" name="q2" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q2" value="过重" data-dosha="kapha">
+							<span>过重</span>
+						</label>
+					</fieldset>
+				
+					<!-- 问题 3：皮肤 -->
+					<fieldset>
+						<legend>3. 皮肤</legend> <!-- 问题标题 -->
+						<label>
+							<input type="radio" name="q3" value="薄，干，冷，粗糙，色深" data-dosha="vata"> <!-- 单选按钮 -->
+							<span>薄，干，冷，粗糙，色深</span> <!-- 选项文字 -->
+						</label>
+						<label>
+							<input type="radio" name="q3" value="平滑，多油，温暖，红润" data-dosha="pitta">
+							<span>平滑，多油，温暖，红润</span>
+						</label>
+						<label>
+							<input type="radio" name="q3" value="厚，多油，凉，白，苍白" data-dosha="kapha">
+							<span>厚，多油，凉，白，苍白</span>
+						</label>
+					</fieldset>
+				<!-- 问题 4：毛发 -->
+				<fieldset>
+					<legend>4. 毛发</legend> <!-- 问题标题 -->
+					<label>
+						<input type="radio" name="q4" value="枯黄，漆黑，纠结，脆，稀薄" data-dosha="vata"> <!-- 单选按钮 -->
+						<span>枯黄，漆黑，纠结，脆，稀薄</span> <!-- 选项文字 -->
+					</label>
+					<label>
+						<input type="radio" name="q4" value="直，多油，金黄，灰，红，秃" data-dosha="pitta">
+						<span>直，多油，金黄，灰，红，秃</span>
+					</label>
+					<label>
+						<input type="radio" name="q4" value="厚，卷曲，多油，波浪状，浓密，各种颜色均有" data-dosha="kapha">
+						<span>厚，卷曲，多油，波浪状，浓密，各种颜色均有</span>
+					</label>
+				</fieldset>
+
+				<!-- 问题 5：牙齿 -->
+				<fieldset>
+					<legend>5. 牙齿</legend> <!-- 问题标题 -->
+					<label>
+						<input type="radio" name="q5" value="突出，大，宽，牙龈薄" data-dosha="vata"> <!-- 单选按钮 -->
+						<span>突出，大，宽，牙龈薄</span> <!-- 选项文字 -->
+					</label>
+					<label>
+						<input type="radio" name="q5" value="适中，软，牙龈柔嫩" data-dosha="pitta">
+						<span>适中，软，牙龈柔嫩</span>
+					</label>
+					<label>
+						<input type="radio" name="q5" value="健康，白，牙龈强健" data-dosha="kapha">
+						<span>健康，白，牙龈强健</span>
+					</label>
+				</fieldset>
+
+				<!-- 问题 6：鼻子 -->
+				<fieldset>
+					<legend>6. 鼻子</legend> <!-- 问题标题 -->
+					<label>
+						<input type="radio" name="q6" value="形状凹凸不平，鼻中隔偏曲" data-dosha="vata"> <!-- 单选按钮 -->
+						<span>形状凹凸不平，鼻中隔偏曲</span> <!-- 选项文字 -->
+					</label>
+					<label>
+						<input type="radio" name="q6" value="长而尖，鼻头红" data-dosha="pitta">
+						<span>长而尖，鼻头红</span>
+					</label>
+					<label>
+						<input type="radio" name="q6" value="短而圆，鼻塌" data-dosha="kapha">
+						<span>短而圆，鼻塌</span>
+					</label>
+				</fieldset>
+
+				<!-- 问题 7：眼睛 -->
+				<fieldset>
+					<legend>7. 眼睛</legend> <!-- 问题标题 -->
+					<label>
+						<input type="radio" name="q7" value="小，深陷，干涩，灵活，黑，棕，神经质" data-dosha="vata"> <!-- 单选按钮 -->
+						<span>小，深陷，干涩，灵活，黑，棕，神经质</span> <!-- 选项文字 -->
+					</label>
+					<label>
+						<input type="radio" name="q7" value="锐利，明亮，灰，绿，黄/红，对光敏感" data-dosha="pitta">
+						<span>锐利，明亮，灰，绿，黄/红，对光敏感</span>
+					</label>
+					<label>
+						<input type="radio" name="q7" value="大，美，蓝，冷静，慈爱" data-dosha="kapha">
+						<span>大，美，蓝，冷静，慈爱</span>
+					</label>
+				</fieldset>
+
+				<!-- 问题 8：指甲 -->
+				<fieldset>
+					<legend>8. 指甲</legend> <!-- 问题标题 -->
+					<label>
+						<input type="radio" name="q8" value="干燥，粗糙，脆，易开衩断裂" data-dosha="vata"> <!-- 单选按钮 -->
+						<span>干燥，粗糙，脆，易开衩断裂</span> <!-- 选项文字 -->
+					</label>
+					<label>
+						<input type="radio" name="q8" value="尖锐，有弹性，粉红，有光泽" data-dosha="pitta">
+						<span>尖锐，有弹性，粉红，有光泽</span>
+					</label>
+					<label>
+						<input type="radio" name="q8" value="厚，多油，平滑，光亮" data-dosha="kapha">
+						<span>厚，多油，平滑，光亮</span>
+					</label>
+				</fieldset>
+
+					<!-- 下一步按钮 -->
+					<div class="button-container">
+						<button type="button" id="next1" class="next-button">下一页</button> <!-- 按钮切换到下一页 -->
+					</div>
+				</div>
+				<!-- 页面 2 -->
+				<div class="form-page">
+					<!-- 问题 9：嘴唇 -->
+					<fieldset>
+						<legend>9. 嘴唇</legend>
+						<label>
+							<input type="radio" name="q9" value="干燥，有裂纹，略带黑/棕色" data-dosha="vata">
+							<span>干燥，有裂纹，略带黑/棕色</span>
+						</label>
+						<label>
+							<input type="radio" name="q9" value="红，红肿，带黄色" data-dosha="pitta">
+							<span>红，红肿，带黄色</span>
+						</label>
+						<label>
+							<input type="radio" name="q9" value="平滑，多油，苍白，带白色" data-dosha="kapha">
+							<span>平滑，多油，苍白，带白色</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 10：下巴 -->
+					<fieldset>
+						<legend>10. 下巴</legend>
+						<label>
+							<input type="radio" name="q10" value="薄，有棱角" data-dosha="vata">
+							<span>薄，有棱角</span>
+						</label>
+						<label>
+							<input type="radio" name="q10" value="尖细" data-dosha="pitta">
+							<span>尖细</span>
+						</label>
+						<label>
+							<input type="radio" name="q10" value="圆，双下巴" data-dosha="kapha">
+							<span>圆，双下巴</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 11：脸颊 -->
+					<fieldset>
+						<legend>11. 脸颊</legend>
+						<label>
+							<input type="radio" name="q11" value="有皱纹，凹陷" data-dosha="vata">
+							<span>有皱纹，凹陷</span>
+						</label>
+						<label>
+							<input type="radio" name="q11" value="平滑，平坦" data-dosha="pitta">
+							<span>平滑，平坦</span>
+						</label>
+						<label>
+							<input type="radio" name="q11" value="圆，丰满" data-dosha="kapha">
+							<span>圆，丰满</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 12：脖子 -->
+					<fieldset>
+						<legend>12. 脖子</legend>
+						<label>
+							<input type="radio" name="q12" value="细，长" data-dosha="vata">
+							<span>细，长</span>
+						</label>
+						<label>
+							<input type="radio" name="q12" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q12" value="粗大，有皱纹" data-dosha="kapha">
+							<span>粗大，有皱纹</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 13：胸部 -->
+					<fieldset>
+						<legend>13. 胸部</legend>
+						<label>
+							<input type="radio" name="q13" value="平坦，凹陷" data-dosha="vata">
+							<span>平坦，凹陷</span>
+						</label>
+						<label>
+							<input type="radio" name="q13" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q13" value="宽阔，圆" data-dosha="kapha">
+							<span>宽阔，圆</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 14：腹部 -->
+					<fieldset>
+						<legend>14. 腹部</legend>
+						<label>
+							<input type="radio" name="q14" value="薄，平坦，凹陷" data-dosha="vata">
+							<span>薄，平坦，凹陷</span>
+						</label>
+						<label>
+							<input type="radio" name="q14" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q14" value="巨大，大腹便便" data-dosha="kapha">
+							<span>巨大，大腹便便</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 15：肚脐 -->
+					<fieldset>
+						<legend>15. 肚脐</legend>
+						<label>
+							<input type="radio" name="q15" value="小，不规则，突出" data-dosha="vata">
+							<span>小，不规则，突出</span>
+						</label>
+						<label>
+							<input type="radio" name="q15" value="椭圆，浅" data-dosha="pitta">
+							<span>椭圆，浅</span>
+						</label>
+						<label>
+							<input type="radio" name="q15" value="大，深，圆，撑开" data-dosha="kapha">
+							<span>大，深，圆，撑开</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 16：臀部 -->
+					<fieldset>
+						<legend>16. 臀部</legend>
+						<label>
+							<input type="radio" name="q16" value="修长，瘦薄" data-dosha="vata">
+							<span>修长，瘦薄</span>
+						</label>
+						<label>
+							<input type="radio" name="q16" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q16" value="沉重，大" data-dosha="kapha">
+							<span>沉重，大</span>
+						</label>
+					</fieldset>
+					<div class="button-container">
+						<button type="button" id="prev2" class="prev-button">上一页</button>
+						<button type="button" id="next2" class="next-button">下一页</button>
+					</div>
+				</div>
+				<!-- 页面 3 -->
+				<div class="form-page">
+					<!-- 问题 17：关节 -->
+					<fieldset>
+						<legend>17. 关节</legend>
+						<label>
+							<input type="radio" name="q17" value="冷，噼啪作响" data-dosha="vata">
+							<span>冷，噼啪作响</span>
+						</label>
+						<label>
+							<input type="radio" name="q17" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q17" value="宽大，圆润" data-dosha="kapha">
+							<span>宽大，圆润</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 18：食欲 -->
+					<fieldset>
+						<legend>18. 食欲</legend>
+						<label>
+							<input type="radio" name="q18" value="时好时坏，量少" data-dosha="vata">
+							<span>时好时坏，量少</span>
+						</label>
+						<label>
+							<input type="radio" name="q18" value="消化旺盛，食量大" data-dosha="pitta">
+							<span>消化旺盛，食量大</span>
+						</label>
+						<label>
+							<input type="radio" name="q18" value="吃得慢，但食量稳定" data-dosha="kapha">
+							<span>吃得慢，但食量稳定</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 19：消化 -->
+					<fieldset>
+						<legend>19. 消化</legend>
+						<label>
+							<input type="radio" name="q19" value="时好时坏，易胀气" data-dosha="vata">
+							<span>时好时坏，易胀气</span>
+						</label>
+						<label>
+							<input type="radio" name="q19" value="快，造成灼热" data-dosha="pitta">
+							<span>快，造成灼热</span>
+						</label>
+						<label>
+							<input type="radio" name="q19" value="时间长，形成粘液" data-dosha="kapha">
+							<span>时间长，形成粘液</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 20：味道的偏好 -->
+					<fieldset>
+						<legend>20. 味道的偏好</legend>
+						<label>
+							<input type="radio" name="q20" value="甜，酸，咸" data-dosha="vata">
+							<span>甜，酸，咸</span>
+						</label>
+						<label>
+							<input type="radio" name="q20" value="甜，苦，涩" data-dosha="pitta">
+							<span>甜，苦，涩</span>
+						</label>
+						<label>
+							<input type="radio" name="q20" value="苦，辛辣，涩" data-dosha="kapha">
+							<span>苦，辛辣，涩</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 21：口渴状态 -->
+					<fieldset>
+						<legend>21. 口渴状态</legend>
+						<label>
+							<input type="radio" name="q21" value="时而这样，时而那样" data-dosha="vata">
+							<span>时而这样，时而那样</span>
+						</label>
+						<label>
+							<input type="radio" name="q21" value="经常口渴" data-dosha="pitta">
+							<span>经常口渴</span>
+						</label>
+						<label>
+							<input type="radio" name="q21" value="很少口渴" data-dosha="kapha">
+							<span>很少口渴</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 22：排便 -->
+					<fieldset>
+						<legend>22. 排便</legend>
+						<label>
+							<input type="radio" name="q22" value="容易便秘" data-dosha="vata">
+							<span>容易便秘</span>
+						</label>
+						<label>
+							<input type="radio" name="q22" value="形状松散" data-dosha="pitta">
+							<span>形状松散</span>
+						</label>
+						<label>
+							<input type="radio" name="q22" value="粗厚，多油，排便迟缓" data-dosha="kapha">
+							<span>粗厚，多油，排便迟缓</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 23：生理活动 -->
+					<fieldset>
+						<legend>23. 生理活动</legend>
+						<label>
+							<input type="radio" name="q23" value="过动" data-dosha="vata">
+							<span>过动</span>
+						</label>
+						<label>
+							<input type="radio" name="q23" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q23" value="久坐不动" data-dosha="kapha">
+							<span>久坐不动</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 24：心智活动 -->
+					<fieldset>
+						<legend>24. 心智活动</legend>
+						<label>
+							<input type="radio" name="q24" value="总是积极主动" data-dosha="vata">
+							<span>总是积极主动</span>
+						</label>
+						<label>
+							<input type="radio" name="q24" value="适中" data-dosha="pitta">
+							<span>适中</span>
+						</label>
+						<label>
+							<input type="radio" name="q24" value="迟钝，缓慢" data-dosha="kapha">
+							<span>迟钝，缓慢</span>
+						</label>
+					</fieldset>
+					<div class="button-container">
+						<button type="button" id="prev2" class="prev-button">上一页</button>
+						<button type="button" id="next2" class="next-button">下一页</button>
+					</div>
+				</div>
+				<!-- 最后一页 -->
+				<div class="form-page">
+					<!-- 问题 25：情绪 -->
+					<fieldset>
+						<legend>25. 情绪</legend>
+						<label>
+							<input type="radio" name="q25" value="焦虑，恐惧，不确定，灵活" data-dosha="vata">
+							<span>焦虑，恐惧，不确定，灵活</span>
+						</label>
+						<label>
+							<input type="radio" name="q25" value="愤怒，仇恨，猜忌，决断" data-dosha="pitta">
+							<span>愤怒，仇恨，猜忌，决断</span>
+						</label>
+						<label>
+							<input type="radio" name="q25" value="冷静，贪婪，依恋" data-dosha="kapha">
+							<span>冷静，贪婪，依恋</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 26：价值观 -->
+					<fieldset>
+						<legend>26. 价值观</legend>
+						<label>
+							<input type="radio" name="q26" value="可变，多变" data-dosha="vata">
+							<span>可变，多变</span>
+						</label>
+						<label>
+							<input type="radio" name="q26" value="热切，极端" data-dosha="pitta">
+							<span>热切，极端</span>
+						</label>
+						<label>
+							<input type="radio" name="q26" value="一致，深入，老练成熟" data-dosha="kapha">
+							<span>一致，深入，老练成熟</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 27：对于问题 -->
+					<fieldset>
+						<legend>27. 对于问题</legend>
+						<label>
+							<input type="radio" name="q27" value="回应迅速，不求完美" data-dosha="vata">
+							<span>回应迅速，不求完美</span>
+						</label>
+						<label>
+							<input type="radio" name="q27" value="回应精确" data-dosha="pitta">
+							<span>回应精确</span>
+						</label>
+						<label>
+							<input type="radio" name="q27" value="缓慢且确实" data-dosha="kapha">
+							<span>缓慢且确实</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 28：记忆力 -->
+					<fieldset>
+						<legend>28. 记忆力</legend>
+						<label>
+							<input type="radio" name="q28" value="短期记忆好，长期记忆差" data-dosha="vata">
+							<span>短期记忆好，长期记忆差</span>
+						</label>
+						<label>
+							<input type="radio" name="q28" value="明白清楚" data-dosha="pitta">
+							<span>明白清楚</span>
+						</label>
+						<label>
+							<input type="radio" name="q28" value="记忆缓慢但持久" data-dosha="kapha">
+							<span>记忆缓慢但持久</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 29：梦境 -->
+					<fieldset>
+						<legend>29. 梦境</legend>
+						<label>
+							<input type="radio" name="q29" value="快速的，积极的，大量的，恐惧的" data-dosha="vata">
+							<span>快速的，积极的，大量的，恐惧的</span>
+						</label>
+						<label>
+							<input type="radio" name="q29" value="火爆的，战争，暴力" data-dosha="pitta">
+							<span>火爆的，战争，暴力</span>
+						</label>
+						<label>
+							<input type="radio" name="q29" value="湖泊，雪，浪漫的" data-dosha="kapha">
+							<span>湖泊，雪，浪漫的</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 30：睡眠 -->
+					<fieldset>
+						<legend>30. 睡眠</legend>
+						<label>
+							<input type="radio" name="q30" value="不足，断断续续，失眠" data-dosha="vata">
+							<span>不足，断断续续，失眠</span>
+						</label>
+						<label>
+							<input type="radio" name="q30" value="少但睡得好" data-dosha="pitta">
+							<span>少但睡得好</span>
+						</label>
+						<label>
+							<input type="radio" name="q30" value="深沉，时间长" data-dosha="kapha">
+							<span>深沉，时间长</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 31：说话 -->
+					<fieldset>
+						<legend>31. 说话</legend>
+						<label>
+							<input type="radio" name="q31" value="快速，但语义不清" data-dosha="vata">
+							<span>快速，但语义不清</span>
+						</label>
+						<label>
+							<input type="radio" name="q31" value="精准，一针见血" data-dosha="pitta">
+							<span>精准，一针见血</span>
+						</label>
+						<label>
+							<input type="radio" name="q31" value="缓慢，声音单调" data-dosha="kapha">
+							<span>缓慢，声音单调</span>
+						</label>
+					</fieldset>
+
+					<!-- 问题 32：财务 -->
+					<fieldset>
+						<legend>32. 财务</legend>
+						<label>
+							<input type="radio" name="q32" value="钱花在琐碎的东西上" data-dosha="vata">
+							<span>钱花在琐碎的东西上</span>
+						</label>
+						<label>
+							<input type="radio" name="q32" value="钱花在奢侈品上" data-dosha="pitta">
+							<span>钱花在奢侈品上</span>
+						</label>
+						<label>
+							<input type="radio" name="q32" value="善于存钱" data-dosha="kapha">
+							<span>善于存钱</span>
+						</label>
+					</fieldset>
+					<div class="button-container">
+						<button type="button" id="prevFinal" class="prev-button">上一页</button>
+						<button type="submit">提交测试</button>
+					</div>
+					</div>
+			</form>
+				<!-- 结果容器 -->
+				<div id="result-container" style="display: none;">
+					<h2>您的测试结果：</h2>
+					<p><strong>分数:</strong></p>
+					<ul id="result-scores">
+						<!-- 动态添加分数 -->
+					</ul>
+					<p><strong>比值:</strong></p>
+					<ul id="result-ratios">
+						<!-- 动态添加比值 -->
+					</ul>
+					<div class="button-container">
+						<button id="restart-test" class="restart-button">重新测试</button>
+					</div>
+				</div>			
+        </article>
+    </main>
+    <script src="/static/js/form.js"></script>
+</body>
+</html>
+
+

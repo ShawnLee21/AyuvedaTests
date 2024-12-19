@@ -1,0 +1,5 @@
+Flask==2.2.0
+Werkzeug==2.2.0
+google-api-python-client==2.70.0
+google-auth==2.15.0
+
