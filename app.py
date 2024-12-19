@@ -7,7 +7,7 @@ import os
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
 #Vercel 配置
-from werkzeug.wsgi import DispatcherMiddleware
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 app.wsgi_app = DispatcherMiddleware(app.wsgi_app)
 
 # Google Sheets 配置
@@ -92,6 +92,11 @@ def test_write():
 # Vercel 入口点
 def vercel_app(environ, start_response):
     return app(environ, start_response)
+
+@app.route("/")
+def hello():
+    print("Received request at /")
+    return "Hello, Vercel!"
 
 
 if __name__ == '__main__':
