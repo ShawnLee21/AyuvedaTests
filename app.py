@@ -3,6 +3,8 @@ from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 import os
 import traceback  # 用于打印详细的错误堆栈信息
+import werkzeug
+print(f"werkzeug version: {werkzeug.__version__}")
 
 # Flask 配置
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -92,6 +94,8 @@ def test_write():
         print("详细错误堆栈:")
         traceback.print_exc()  # 输出详细的堆栈信息
         return f"测试写入失败: {str(e)}"
+    
+
 
 
 # Vercel 入口点
