@@ -2,35 +2,32 @@ from flask import Flask, request, jsonify, render_template
 from googleapiclient.discovery import build
 from google.oauth2.service_account import Credentials
 import os
-import json
-from dotenv import load_dotenv
-
-# 加载 GOOGLE_SERVICE.env 文件中的环境变量
-load_dotenv(dotenv_path='GOOGLE_SERVICE.env')  # 加载文件名为 GOOGLE_SERVICE.env 的环境变量
+import traceback  # 用于打印详细的错误堆栈信息
 
 # Flask 配置
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
-# 从环境变量获取 Google 服务账户文件的内容
-service_account_info = json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"))  # 读取环境变量 GOOGLE_SERVICE_ACCOUNT_JSON
-
-# 使用服务账户信息进行认证
-credentials = Credentials.from_service_account_info(service_account_info)
-
 # Google Sheets 配置
+SERVICE_ACCOUNT_FILE = os.path.join(os.getcwd(), 'ayuvedatest-9e2194434421.json')  # 确保路径正确
 SPREADSHEET_ID = '1sOit_I5vOfDXDdhG7p5cJAmYse_McUbHZOlGc_n5Sts'  # 替换为您的 Google Sheets ID
 RANGE_NAME = 'Sheet1!A1'  # 数据写入范围
 
 # 初始化 Google Sheets 客户端
 try:
+    credentials = Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE,
+        scopes=["https://www.googleapis.com/auth/spreadsheets"]
+    )
     sheet_service = build('sheets', 'v4', credentials=credentials)
 except Exception as e:
     print("Google Sheets 初始化失败:", str(e))
     sheet_service = None  # 确保即使出错程序仍能运行
 
+
 @app.route('/form')
 def form():
     return render_template('form.html')
+
 
 @app.route('/submit', methods=['POST'])
 def submit_data():
@@ -63,8 +60,13 @@ def submit_data():
         print("写入成功:", result)
         return jsonify({'status': 'success', 'message': '数据提交成功！'})
     except Exception as e:
-        print("写入失败:", str(e))
-        return jsonify({'status': 'error', 'message': str(e)}), 500
+        # 详细的错误日志输出
+        error_message = f"写入失败: {str(e)}"
+        print(error_message)
+        print("详细错误堆栈:")
+        traceback.print_exc()  # 输出详细的堆栈信息
+        return jsonify({'status': 'error', 'message': error_message}), 500
+
 
 @app.route('/test_write')
 def test_write():
@@ -84,12 +86,18 @@ def test_write():
         print("测试写入成功:", result)
         return "测试写入成功"
     except Exception as e:
-        print("测试写入失败:", str(e))
+        # 详细的错误日志输出
+        error_message = f"测试写入失败: {str(e)}"
+        print(error_message)
+        print("详细错误堆栈:")
+        traceback.print_exc()  # 输出详细的堆栈信息
         return f"测试写入失败: {str(e)}"
+
 
 # Vercel 入口点
 def vercel_app(environ, start_response):
     return app(environ, start_response)
+
 
 @app.route('/')
 def index():
